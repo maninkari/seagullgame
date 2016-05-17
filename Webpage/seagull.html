@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>seagull</title>
+		<style type="text/css" media="screen">
+		html, body { height:100%; background-color: #ffffff;}
+		body { margin:0; padding:0; overflow:hidden; }
+		#flashContent { width:100%; height:100%; }
+		</style>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+						(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-75760474-1', 'auto');
+			ga('send', 'pageview');
+
+		</script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function receiveTextFromAS3(Txt) {
+				//document.getElementById('htmlText').innerHTML = Txt;
+				console.log(Txt);
+			}
+			function receiveTimeFromAS3(Txt) {
+				document.getElementById('time').innerHTML = Txt;
+
+				if(Txt == "1") {
+					document.getElementById('finalscore').innerHTML = "";
+					document.getElementById('colleague').innerHTML = "";
+					document.getElementById('score').innerHTML = "0";
+				}
+			}
+			function receiveScoreFromAS3(Txt) {
+				document.getElementById('score').innerHTML = Txt;
+				//console.log("score: " + Txt);
+			}
+			function receiveFinalScoreFromAS3(Txt) {
+				document.getElementById('finalscore').innerHTML = ("Final Score: " + Txt);
+
+				registerScore(Txt);
+			}
+			function pooh(Txt) {
+				document.getElementById('colleague').innerHTML = Txt;
+
+				httpGetAsync("https://trl7jx9cvk.execute-api.eu-west-1.amazonaws.com/prod/api/v1/actions/pooh/" + Txt);
+			}
+			function registerScore(Txt) {
+				httpPostAsync(
+						"https://trl7jx9cvk.execute-api.eu-west-1.amazonaws.com/prod/api/v1/actions/score",
+						JSON.stringify({score: Txt})
+				);
+			}
+			function httpGetAsync(theUrl) { // could pass callback function
+				var xmlHttp = new XMLHttpRequest();
+				xmlHttp.onreadystatechange = function() {
+					if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+						console.log(xmlHttp.responseText);
+				}
+				xmlHttp.open("GET", theUrl, true); // true for asynchronous
+				xmlHttp.send(null);
+			}
+			function httpPostAsync(theUrl, params) {
+				var xmlHttp = new XMLHttpRequest();
+
+				xmlHttp.onreadystatechange = function() {//Call a function when the state changes.
+					if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+						console.log(xmlHttp.responseText);
+					}
+				}
+
+				xmlHttp.open("POST", theUrl, true);
+				xmlHttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+				xmlHttp.send(params);
+			}
+
+		</script>
+		<div style="float:left">
+			<div id="flashContent">
+				<object type="application/x-shockwave-flash" data="seagull.swf" width="720" height="480" id="seagull" style="float: none; vertical-align:middle">
+					<param name="movie" value="seagull.swf" />
+					<param name="quality" value="high" />
+					<param name="bgcolor" value="#3399ff" />
+					<param name="play" value="true" />
+					<param name="loop" value="true" />
+					<param name="wmode" value="window" />
+					<param name="scale" value="showall" />
+					<param name="menu" value="true" />
+					<param name="devicefont" value="false" />
+					<param name="salign" value="" />
+					<param name="allowScriptAccess" value="true" />
+					<a href="http://www.adobe.com/go/getflash">
+						<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+					</a>
+				</object>
+			</div>
+		</div>
+		<br>
+		<h2 style="margin-left:750px">time: <span id="time">0</span></h2>
+		<h3 style="margin-left:750px"><img src="images/pooh.png" height="24" width="24" style="margin-right:4px"><span id="colleague"></span></h3>
+		<h3 style="margin-left:750px">score: <span id="score"></span></h3>
+		<h3 style="margin-left:750px"><span id="finalscore"></span></h3>
+
+		<br>
+	</body>
+</html>
