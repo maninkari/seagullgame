@@ -46,13 +46,19 @@
 			function pooh(Txt) {
 				document.getElementById('colleague').innerHTML = Txt;
 
+				//CORS needs to be enabled in API Gateway for the following URL to allowed cross-domain calls 
 				httpGetAsync("https://trl7jx9cvk.execute-api.eu-west-1.amazonaws.com/prod/api/v1/actions/pooh/" + Txt);
 			}
 			function registerScore(Txt) {
+
+				//CORS needs to enabled in API Gateway for the following URLs to allowed cross-domain calls  
+
 				httpPostAsync(
 						"https://trl7jx9cvk.execute-api.eu-west-1.amazonaws.com/prod/api/v1/actions/score",
 						JSON.stringify({score: Txt})
 				);
+
+				httpGetAsync("https://trl7jx9cvk.execute-api.eu-west-1.amazonaws.com/prod/api/v1/actions/stats");
 			}
 			function httpGetAsync(theUrl) { // could pass callback function
 				var xmlHttp = new XMLHttpRequest();
@@ -60,6 +66,7 @@
 					if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
 						console.log(xmlHttp.responseText);
 				}
+			 
 				xmlHttp.open("GET", theUrl, true); // true for asynchronous
 				xmlHttp.send(null);
 			}
